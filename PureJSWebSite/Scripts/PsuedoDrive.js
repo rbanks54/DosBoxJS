@@ -3,39 +3,104 @@ var psuedoDrive = (function () {
     var module = {};
 
     module.drive = function (driveName) {
-        var driveLetter = driveName.charAt(0).toUpperCase() + ':';
-        this.DriveLetter = driveLetter;
-        this.RootDirectory = new module.directory(driveLetter);
-        this.CurrentDirectory = this.RootDirectory;
+        this.driveLetter = driveName.charAt(0).toUpperCase() + ':';
+        this.rootDirectory = new module.directory('\\');
+        this.currentDirectory = this.rootDirectory;
     };
 
     module.directory = function (name) {
-        this.Name = name;
-        this.files = [];
-        this.subDirectories = [];
+        this.name = name;
+        this.items = [];
+        this.isDirectory = true;
     };
 
     module.directory.prototype.addDirectory = function (subDirName) {
         var subDir = new module.directory(subDirName);
-        this.subDirectories.join(subDir);
+        this.items.join(subDir);
+        subDir.parent = this;
         return subDir;
     };
 
     module.directory.prototype.addFile = function (fileName, content) {
         var f = new file(fileName, content);
-        this.files.join(f);
+        this.items.join(f);
+        file.parent = this;
         return f;
     };
 
-    module.directory.prototype.getItemFromPath = function (path) {
-        return undefined;
+    module.directory.prototype.getItemFromPath = function (rawPath) {
+        // Remove any "/" with "\"
+        var path = rawPath.replace('/', '\\');
+
+        // Remove ending "\"
+        path = path.trim();
+        if (path.charAt(path.length - 1) === '\\' && path.length >= 2) {
+            path = path.substr(0, path.length - 1);
+        }
+
+        // Test for special paths
+        if (path === '\\') {
+            return rootDirectory;
+        }
+
+        if (path === '..') {
+            var parent = currentDirectory.parent || rootDirectory;
+            return parent;
+        }
+
+        if (path === '.') {
+            return currentDirectory;
+        }
+
+        // Check for .\
+        if (path.length >= 2) {
+            if (path.substring(0, 2) === '.\\') {
+                path = path.substring(2, path.length - 2);
+            }
+        }
+
+        // Check for ..\
+        if (path.length >= 3) {
+            if (path === '..\\') {
+                var temp = new StringBuilder();
+                temp.Append(CurrentDirectory.Parent.Path);
+                temp.Append("\\");
+                temp.Append(givenItemPathPatched.Substring(3, givenItemPathPatched.Length - 3));
+                givenItemPathPatched = temp.ToString();
+            }
+        }
+
+        // Add drive name if path starts with "\"
+        if (givenItemPathPatched[0] == '\\') {
+            givenItemPathPatched = driveLetter + ":" + givenItemPathPatched;
+        }
+
+        // Make absolute path from relative paths
+        if (givenItemPathPatched.Length == 1 || givenItemPathPatched[1] != ':') {
+            givenItemPathPatched = CurrentDirectory + "\\" + givenItemPathPatched;
+        }
+
+        // Find more complex paths recursive
+        if (givenItemPathPatched.CompareTo(rootDir.Path) == 0) {
+            return rootDir;
+        }
+
+        return GetItemFromDirectory(givenItemPathPatched, rootDir);
     };
 
 
     var file = function (fileName, content) {
-        this.FileName = fileName;
-        this.Content = content;
+        this.name = fileName;
+        this.content = content;
+        this.isFile = true;
     };
+
+    module.directory.prototype.path = function() {
+        if (this.parent)
+            return this.parent.path + '\\' + this.name;
+        return this.name;
+    };
+    file.prototype.path = module.directory.prototype.path;
 
     return module;
 })();
