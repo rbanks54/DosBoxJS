@@ -243,7 +243,7 @@
         e.preventDefault();
         e.stopPropagation();
 
-        var value = input.attr( 'value' );
+        var value = input.prop( 'value' );
 
         if( settings.HISTORY ) {
           if( history.length > settings.HISTORY_ENTRIES ) history.shift();
@@ -251,7 +251,7 @@
         }
         
         // Reset The Input
-        input.attr( 'value', '' );
+        input.prop( 'value', '' );
         var tokens = value.split( /\s+/ );
         var key    = tokens[0];
         
@@ -350,7 +350,7 @@
 
             if( settings.AUTOCOMPLETE ) {
               var commands      = [ ];   
-              var current_value = input.attr( 'value' );
+              var current_value = input.prop( 'value' );
               // Command Completion
               if( current_value.match( /^[^\s]{0,}$/ ) ) {
                 for( i in dispatch ) {
@@ -364,7 +364,7 @@
                 if( commands.length > 1 ) { 
                   update_content( settings.PS1, current_value, commands.join( '<br>' ) );
                 } else if( commands.length == 1 ) {
-                  input.attr( 'value', commands.pop() + ' ' );  
+                  input.prop( 'value', commands.pop() + ' ' );  
                 }
               }
             }
@@ -376,7 +376,7 @@
             e.preventDefault();
             if( settings.HISTORY ) {
               hcurrent  = ( hcurrent === null )? history.length - 1 : ( hcurrent == 0 ) ? history.length - 1 : hcurrent - 1;
-              input.attr( 'value', history[ hcurrent ] );
+              input.prop( 'value', history[ hcurrent ] );
             }
           break;
 
@@ -386,7 +386,7 @@
             if( settings.HISTORY ) {
               if( hcurrent === null || hcurrent == (history.length - 1 ) ) break;
               hcurrent++;
-              input.attr( 'value', history[ hcurrent ] );
+              input.prop( 'value', history[ hcurrent ] );
             }
           break;
 

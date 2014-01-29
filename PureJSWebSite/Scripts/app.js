@@ -27,11 +27,11 @@ $(document).ready(function () {
             PS1: 'strrev $',
 
             EXIT_HOOK: function () {
-                return 'exit interface commands';
+                return 'String reversal disabled';
             },
 
             START_HOOK: function () {
-                return 'exit interface commands';
+                return 'String reversal enabled. Type <strong>exit</strong> to quit';
             },
 
             DISPATCH: function (tokens) {
@@ -45,11 +45,13 @@ $(document).ready(function () {
     }
 
     $.register_command('help', function () {
-        return 'Wterminal' + '<br>' +
-            'eval - Usage eval &lt;any javascript exression&gt;<br>' +
-            'date - Returns Current Date<br>' +
-            'cap  - Usage cap &lt;string&gt; - Turns the string to upcase<br>' +
-            'go - Usage go &lt;url&gt; - Sets the browser location to URL<br>';
+        return 'DOS Box commands' + '<br>' +
+            '<span class="helpcommand">clear</span> - clears the screen<br>' +
+            '<span class="helpcommand">date</span> - Returns the current date<br>' +
+            '<span class="helpcommand">cap</span>  - Usage cap &lt;string&gt; - Turns the string to uppercase<br>' +
+            '<span class="helpcommand">go</span> - Usage go &lt;url&gt; - Sets the browser location to URL<br>' +
+            '<span class="helpcommand">strrev</span> - reverses all strings, until you type <em>exit</em><br>'
+            ;
     });
 
 });
