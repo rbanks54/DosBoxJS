@@ -31,7 +31,13 @@ describe('drive tests', function () {
     });
 
     it('should show correct paths for root directory', function () {
-        expect(drive.rootDirectory.path()).toBe('\\');
+        expect(drive.rootDirectory.getPath()).toBe('\\');
+    });
+
+    if ('should know if a path exists', function() {
+        var path = '\\subDir1\\';
+        var exists = drive.pathExists(path);
+        expect(exists).toBeTruthy();
     });
 
     //it('should be able to change directory', function () {

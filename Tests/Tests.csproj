@@ -43,7 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\jasmine.css" />
-    <Content Include="DriveTests\DriveTests.js" />
+    <Content Include="Tests\directoryTests.js" />
+    <Content Include="Tests\driveTests.js" />
     <Content Include="Scripts\jasmine-html.js" />
     <Content Include="Scripts\jasmine.js" />
   </ItemGroup>

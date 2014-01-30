@@ -5,6 +5,8 @@
 $(document).ready(function () {
     $('#wterm').wterm({ WIDTH: '100%', HEIGHT: '100%', WELCOME_MESSAGE: 'Welcome to DOS Box - JavaScript edition. For the list of commands type <strong>help</strong>' });
 
+    var currentDrive = new psuedoDrive("C");
+
     var command_directory = {
         'date': function (tokens) {
             var now = new Date();
@@ -37,6 +39,12 @@ $(document).ready(function () {
             DISPATCH: function (tokens) {
                 return tokens.join('').reverse();
             }
+        },
+        
+        'cd': function (tokens) {
+            if (tokens.length > 0)
+                currentDrive.setDirectory(tokens[1]);
+            return currentDrive.currentDirectory.path();
         }
     };
 

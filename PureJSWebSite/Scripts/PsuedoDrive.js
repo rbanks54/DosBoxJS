@@ -8,6 +8,17 @@ var psuedoDrive = (function () {
         this.currentDirectory = this.rootDirectory;
     };
 
+    module.drive.prototype.pathExists = function (pathToCheck) {
+        
+        return true;
+    };
+
+    module.drive.prototype.setDirectory = function(targetPath) {
+        var isValid = this.pathExists(targetPath);
+        //TODO - finish this off
+        return isValid;
+    };
+
     module.directory = function (name) {
         this.name = name;
         this.items = [];
@@ -16,19 +27,19 @@ var psuedoDrive = (function () {
 
     module.directory.prototype.addDirectory = function (subDirName) {
         var subDir = new module.directory(subDirName);
-        this.items.join(subDir);
+        this.items.push(subDir);
         subDir.parent = this;
         return subDir;
     };
 
     module.directory.prototype.addFile = function (fileName, content) {
         var f = new file(fileName, content);
-        this.items.join(f);
+        this.items.push(f);
         file.parent = this;
         return f;
     };
 
-    module.directory.prototype.getItemFromPath = function (rawPath) {
+    module.drive.prototype.getItemFromPath = function (rawPath) {
         // Remove any "/" with "\"
         var path = rawPath.replace('/', '\\');
 
@@ -62,32 +73,43 @@ var psuedoDrive = (function () {
         // Check for ..\
         if (path.length >= 3) {
             if (path === '..\\') {
-                var temp = new StringBuilder();
-                temp.Append(CurrentDirectory.Parent.Path);
-                temp.Append("\\");
-                temp.Append(givenItemPathPatched.Substring(3, givenItemPathPatched.Length - 3));
-                givenItemPathPatched = temp.ToString();
+                path = this.currentDirectory.parent.getPath() + '\\' + path.substring(3, path.length - 3);
             }
         }
 
         // Add drive name if path starts with "\"
-        if (givenItemPathPatched[0] == '\\') {
-            givenItemPathPatched = driveLetter + ":" + givenItemPathPatched;
+        if (path[0] == '\\') {
+            path = this.driveLetter + ":" + path;
         }
 
         // Make absolute path from relative paths
-        if (givenItemPathPatched.Length == 1 || givenItemPathPatched[1] != ':') {
-            givenItemPathPatched = CurrentDirectory + "\\" + givenItemPathPatched;
+        if (path.length == 1 || path[1] !== ':') {
+            path = this.currentDirectory + "\\" + path;
         }
 
         // Find more complex paths recursive
-        if (givenItemPathPatched.CompareTo(rootDir.Path) == 0) {
+        if (path === rootDir.getPath()) {
             return rootDir;
         }
 
-        return GetItemFromDirectory(givenItemPathPatched, rootDir);
+        return rootDirectory.getItemFromDirectory(path);
     };
 
+    module.directory.prototype.getItemFromDirectory = function (path) {
+        for (var i = 0; i < this.items.length; i++) {
+            var item = this.items[i];
+            var pathName = item.getPath();
+            if (pathName.toUpperCase() === path.toUpperCase()) {
+                return item;
+            }
+            if (item.isDirectory) {
+                var result = item.getItemFromDirectory(path);
+                if (result)
+                    return result;
+            }
+        }
+        return undefined;
+    };
 
     var file = function (fileName, content) {
         this.name = fileName;
@@ -95,12 +117,12 @@ var psuedoDrive = (function () {
         this.isFile = true;
     };
 
-    module.directory.prototype.path = function() {
+    module.directory.prototype.getPath = function() {
         if (this.parent)
-            return this.parent.path + '\\' + this.name;
+            return this.parent.getPath() + '\\' + this.name;
         return this.name;
     };
-    file.prototype.path = module.directory.prototype.path;
+    file.prototype.getPath = module.directory.prototype.getPath;
 
     return module;
 })();
