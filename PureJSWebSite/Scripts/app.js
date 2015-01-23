@@ -5,14 +5,12 @@
 $(document).ready(function () {
     $('#wterm').wterm({ WIDTH: '100%', HEIGHT: '100%', WELCOME_MESSAGE: 'Welcome to DOS Box - JavaScript edition. For the list of commands type <strong>help</strong>' });
 
-    var currentDrive = new psuedoDrive("C");
+    var currentDrive = new psuedoDrive.drive("C");
 
     var command_directory = {
         'date': function (tokens) {
-            var now = new Date();
-            return now.getDate() + '-' +
-                   now.getMonth() + '-' +
-                   (1900 + now.getYear())
+            var now = moment();
+            return now.format('MMMM Do, YYYY');
         },
 
         'cap': function (tokens) {
@@ -44,7 +42,7 @@ $(document).ready(function () {
         'cd': function (tokens) {
             if (tokens.length > 0)
                 currentDrive.setDirectory(tokens[1]);
-            return currentDrive.currentDirectory.path();
+            return currentDrive.currentDirectory.getPath();
         }
     };
 
@@ -54,11 +52,11 @@ $(document).ready(function () {
 
     $.register_command('help', function () {
         return 'DOS Box commands' + '<br>' +
-            '<span class="helpcommand">clear</span> - clears the screen<br>' +
-            '<span class="helpcommand">date</span> - Returns the current date<br>' +
-            '<span class="helpcommand">cap</span>  - Usage cap &lt;string&gt; - Turns the string to uppercase<br>' +
-            '<span class="helpcommand">go</span> - Usage go &lt;url&gt; - Sets the browser location to URL<br>' +
-            '<span class="helpcommand">strrev</span> - reverses all strings, until you type <em>exit</em><br>'
+            '<span class="helpcommand">clear</span> - clears the screen<br />' +
+            '<span class="helpcommand">date</span> - Returns the current date<br />' +
+            '<span class="helpcommand">cap</span>  - Usage cap &lt;string&gt; - Turns the string to uppercase<br />' +
+            '<span class="helpcommand">go</span> - Usage go &lt;url&gt; - Sets the browser location to URL<br />' +
+            '<span class="helpcommand">strrev</span> - reverses all strings, until you type <em>exit</em><br />'
             ;
     });
 

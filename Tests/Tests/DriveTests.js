@@ -34,7 +34,7 @@ describe('drive tests', function () {
         expect(drive.rootDirectory.getPath()).toBe('\\');
     });
 
-    if ('should know if a path exists', function() {
+    it ('should know if a path exists', function() {
         var path = '\\subDir1\\';
         var exists = drive.pathExists(path);
         expect(exists).toBeTruthy();
