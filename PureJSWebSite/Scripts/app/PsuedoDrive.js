@@ -1,5 +1,5 @@
 ﻿// Code for our fake disk drive and file system that we're using
-var psuedoDrive = (function () {
+define(function(){
     var module = {};
 
     module.drive = function (driveName) {
@@ -9,7 +9,6 @@ var psuedoDrive = (function () {
     };
 
     module.drive.prototype.pathExists = function (pathToCheck) {
-        
         return true;
     };
 
@@ -125,4 +124,4 @@ var psuedoDrive = (function () {
     file.prototype.getPath = module.directory.prototype.getPath;
 
     return module;
-})();
+});
