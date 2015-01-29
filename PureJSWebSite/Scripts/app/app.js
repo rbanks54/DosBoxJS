@@ -2,11 +2,11 @@
     return this.split('').reverse().join('');
 };
 
-define(['jquery','PsuedoDrive','moment','wterm'],function($,psuedoDrive,moment){
+define(['jquery','fakeDrive','moment','wterm'],function($,fakeDrive,moment){
     $(document).ready(function () {
         $('#wterm').wterm({ WIDTH: '100%', HEIGHT: '100%', WELCOME_MESSAGE: 'Welcome to DOS Box - JavaScript edition. For the list of commands type <strong>help</strong>' });
 
-        var currentDrive = new psuedoDrive.drive("C");
+        var currentDrive = new fakeDrive("C");
 
         var command_directory = {
             'date': function (tokens) {

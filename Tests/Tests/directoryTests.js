@@ -1,7 +1,4 @@
-﻿/// <reference path="../Scripts/jasmine.js" />
-/// <reference path="../../purejswebsite/scripts/psuedodrive.js" />
-
-describe('drive tests', function() {
+﻿describe('drive tests', function() {
     var drive;
 
     beforeEach(function() {
