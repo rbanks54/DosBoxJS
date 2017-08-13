@@ -3,10 +3,16 @@ module.exports = function (grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		jasmine: {
 			all: {
-				src: ['PureJsWebSite/Scripts/*.js' ],
+				src: ['PureJSWebSite/Scripts/*.js'],
 				options: {
-					'vendor': ['PureJsWebSite/Scripts/lib/*.js','Tests/Script/*.js'],
-					'specs': ['Tests/Tests/*.js' ]
+					specs: ['Tests/Tests/*.js' ],
+					template: require('grunt-template-jasmine-requirejs'),
+			        templateOptions: {
+						requireConfigFile: 'PureJSWebSite/Scripts/main.js',
+						requireConfig: {
+				            baseUrl: 'PureJSWebSite/Scripts/app'
+				      	}
+			        }
 				}
 			}
 		}
